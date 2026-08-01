@@ -1,10 +1,22 @@
 # Batch Contract
 
-Use a visible numbered contract to prevent silent count reduction and uncontrolled repetition.
+Use a tracking contract to prevent silent count reduction and uncontrolled repetition. Its metadata may be visible, minimal, or internal according to the user's request.
 
-## Numbered list
+## Metadata modes
 
-Create the complete list before any image generation with columns equivalent to:
+Choose exactly one:
+
+| Mode | Use when | Contract surface |
+| --- | --- | --- |
+| `visible` | The user wants a reviewable plan or named assets | Show number, optional name, group, axis values, and unique delta in chat |
+| `minimal` | The user wants count visibility without special naming | Show number, group or function, and unique delta; omit names |
+| `internal` | The user wants only a high-level brief or names may leak into images | Lovart keeps the complete contract in backend state and reports only reconciliation totals |
+
+Metadata is never raster content. Do not forward numbers, names, group titles, table headers, research labels, or status text into the image model unless the user explicitly requests typography as part of the artwork.
+
+## Tracking list
+
+For `visible` mode, use columns equivalent to:
 
 ```text
 | 编号 | 名称 | 分组 | 各轴取值 | 唯一差异点 |
@@ -17,6 +29,8 @@ Require:
 - Continuous numbering across batches and extensions.
 - A final reconciliation of requested, completed, failed, and missing numbers.
 - Explicit acknowledgement of missing outputs instead of silent count reduction.
+
+Names are optional. In `minimal` and `internal` modes, identifiers exist only for delivery tracking and must not become image titles, captions, filename-like text, title bands, or card layouts.
 
 Do not use a collage to substitute for multiple independently requested images.
 
@@ -43,6 +57,8 @@ After rejection, update the shared rule that caused the failure and regenerate o
 - Keep numbering continuous and never restart at `01` between batches.
 - When the user requests immediate full generation, remove the wait but retain per-batch checks.
 
+For an unattended full run, keep checks and retry decisions in Lovart's execution layer. Do not pause for approval, do not emit sample gates, and do not lower material, structural, optical, or compositional quality in later batches.
+
 ## Per-batch checks
 
 - Reconcile number completeness.
@@ -51,6 +67,8 @@ After rejection, update the shared rule that caused the failure and regenerate o
 - Detect repeated composition, landmark, silhouette, subject function, or VFX topology.
 - Recheck the selected asset and quality profiles.
 - Detect reference-role leakage.
+- Detect visible metadata, typography, captions, title bands, card layouts, or other execution-layer leakage.
+- Detect quality regression between early and late batches.
 
 Regenerate failed numbers only.
 Do not discard already approved outputs.
