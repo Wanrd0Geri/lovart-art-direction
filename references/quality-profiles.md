@@ -3,6 +3,12 @@
 Translate quality into visible behavior.
 Require medium-appropriate nonuniform variation instead of generic polish.
 
+## Medium-first positioning
+
+Lock the intended image-making medium before applying culture, genre, subject, or mood. A broad label may carry an unintended production tier. When the user requests premium UE or Blender CG with `国漫`, `仙侠`, or another genre label, lead with high-end physically grounded CG behavior and express the genre through worldbuilding, cultural sources, form, material, color, and scale.
+
+Do not use `国漫风`, `仙侠风`, a studio name, or a work title as the operative rendering instruction. Translate it into visible attributes. Use engine and renderer names only as supporting shorthand after describing geometry, material response, light transport, scale, and optical finish.
+
 For physical materials, vary roughness, texture scale, reflection, transmission, seams, or manufacturing response in ways supported by the object's state.
 For 2D media, vary strokes, edges, grain, value grouping, or color shapes.
 For VFX, vary density, turbulence, edge breakup, particle decay, and phase behavior.
@@ -21,6 +27,15 @@ Do not age pristine, ceremonial, sterile, or intentionally flat assets.
 
 Keep the visual system stable across a set without forcing identical lenses, weather, or camera positions.
 
+### Premium CG environment condition
+
+When the user requests top-tier UE or Blender environment work:
+
+- Lead with high-end realistic CG environment output, credible world scale, physically grounded materials, global light relationships, atmospheric depth, and focal hierarchy.
+- Keep architecture functional: access, circulation, load path, drainage, and environmental contact must remain readable.
+- Make vegetation obey species, growth direction, attachment, climate, and density logic before adding fantasy behavior.
+- Use genre language as cultural and narrative guidance, not as permission for low-cost animation rendering, plastic surfaces, uniform sharpness, excessive glow, or generic floating scenery.
+
 ## Realistic character or creature key visual
 
 - Establish identity and silhouette before ornament.
@@ -31,6 +46,15 @@ Keep the visual system stable across a set without forcing identical lenses, wea
 - Match camera and expression to the intended use.
 
 Do not automatically add shallow depth of field, strong rim light, film grain, pores, or dramatic grading.
+
+### Black-background full-body CG condition
+
+When the user requests a 3:4 black-background full-body character showcase:
+
+- Keep the complete silhouette, headwear, equipment, hands, and feet inside the frame with grounded contact.
+- Fill the entire canvas with one seamless black field; do not add a separate title band, card frame, caption zone, or layout margin.
+- Separate dark materials through motivated value and light relationships rather than a mandatory bright rim.
+- Treat any supplied example as quality and finish only unless identity, costume, pose, or subject roles are explicitly assigned.
 
 ## Neutral design sheet
 
