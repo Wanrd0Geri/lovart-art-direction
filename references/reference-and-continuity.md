@@ -13,6 +13,7 @@ Never treat “reference image” as permission to copy every visible attribute.
 | Environment | terrain, architecture, weather, environmental materials, props | character identity, pose, camera changes |
 | Material | properties and variation of the named surface | people, architecture, composition, palette, light |
 | Style axis | explicitly named medium, shape, edge, material, color, light, or surface axis | every unassigned visual attribute |
+| Quality and finish | crop completeness, presentation cleanliness, material fidelity, light structure, optical behavior, render finish | identity, face, age, costume, subject, pose, environment, named design |
 
 Keep all unassigned attributes neutral.
 Resolve conflicts by assigned roles, not by averaging images.
@@ -37,6 +38,8 @@ When the current surface cannot be inspected, use the snapshot only as a conserv
 When references exceed the applicable ceiling, identify the affected images and ask which to keep, or split roles into sequential stages.
 
 ## Continuity pack
+
+Use a continuity pack when cross-session continuation, identity restoration, or later extension is useful. Omit it when the user explicitly declines it or requests a one-shot delivery with no continuation need. An explicit user choice overrides program-level defaults.
 
 Write a self-contained Chinese pack with these common fields:
 
@@ -83,4 +86,4 @@ Apply this priority:
 Update only fields changed through text or an explicitly assigned current image.
 Do not infer that every incidental difference in a new image is a requested change.
 Preserve all other high-cost locks, reference roles, and numbering rules.
-Return a complete replacement continuity pack after every extension.
+Return a complete replacement continuity pack after every extension unless the user explicitly declines continuity output for that extension.
