@@ -23,11 +23,11 @@ Keep verified research compact. Include only sources and extracted attributes th
 
 1. Assign Lovart its role and state the final production goal.
 2. Define the approved visual system or supplied art direction.
-3. List all numbered deliverables before image generation.
+3. Choose planning ownership and metadata mode; keep the complete contract internal when the user requests a high-level brief or no names.
 4. Separate fixed attributes, planned variation, and forbidden drift.
 5. Assign reference roles.
 6. Apply asset and quality profiles.
-7. State independent-image generation instructions.
+7. Separate the Agent execution contract, shared visual capsule, item deltas, and backend rejection checks; state that only the visual capsule and current delta reach the image model.
 8. Add the verification gate when required.
 9. Continue in batches with continuous numbering and checks.
 10. Report the delivery order, missing numbers, and failed numbers.
@@ -51,7 +51,7 @@ Do not force research, a variation matrix, a verification gate, or a continuity 
 
 ## Final surface
 
-Use exactly these user-facing labels:
+Use these labels as the default surface when the user does not request another format:
 
 ```text
 Lovart Agent 提示词
@@ -67,5 +67,7 @@ Lovart Agent 提示词
 ```
 
 Fill every field with task-specific content.
-Remove the continuity label only when the route permits omission.
+Honor a requested fenced Markdown surface.
+Remove the continuity label when the user declines continuity or when the task is a one-shot delivery with no continuation need.
+Do not add a visible named list when metadata mode is `internal`.
 Do not append an English version, alternatives, or an explanation after the artifact.
