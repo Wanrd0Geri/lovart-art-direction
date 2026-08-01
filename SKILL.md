@@ -1,172 +1,165 @@
 ---
 name: lovart-art-direction
-description: 将用户的一句中文设计诉求、参考图和续做包，编译为一份可直接粘贴给 Lovart Agent 的中文总提示词，并默认指定 Nano Banana Pro。用于原创角色、场景、特效、怪物、道具、世界观、多风格调研、门派或地域系列、批量编号生成和跨新会话续做；自动选择调研责任方、资产质量规则、画幅、分辨率、参考图职责、动态校验批和变化矩阵。触发示例包括“调研风格”“批量生成”“设计一套”“每种N张”“门派角色”“世界观设定”“特效阶段表”“题材池”“续做包”“接着上次那批”。不用于单张源图忠实重建、直接写给图像模型的提示词、由当前宿主直接生成图片或最终视频提示词。
+description: 将用户的一句中文设计诉求、参考图和续做包，编译为一份可直接粘贴给 Lovart Agent 的中文总提示词，并默认指定 Nano Banana Pro。用于原创角色、场景、特效、怪物、道具、世界观、多方向调研、门派或地域系列、批量编号生成和跨新会话续做；强制路由、参考图职责、动态校验批、内部追踪合同、字段隔离和交付前检查。触发示例包括“调研风格”“批量生成”“设计一套”“每种N张”“门派角色”“世界观设定”“题材池”“续做包”“接着上次那批”。不用于单张源图忠实重建、由当前宿主直接生成图片或最终视频提示词。
 ---
 
 # Lovart Art Direction
 
 Deliver one complete Chinese prompt that the user can paste into Lovart Agent.
 Do not generate or edit images, operate Lovart, or claim that research or generation already happened.
-Never fabricate sources, current interface capabilities, or completed outputs.
+Treat this skill as a compiler: route first, compile second, validate third, then deliver.
 
-## Load only the required references
+## Mandatory compilation state machine
 
-- Read [output-templates.md](references/output-templates.md) after routing the deliverable, research owner, and complexity.
-- Read [asset-profiles.md](references/asset-profiles.md) for every relevant asset type.
-- Read [quality-profiles.md](references/quality-profiles.md) after identifying the intended use and medium.
-- Read [research-and-variation.md](references/research-and-variation.md) for `program`, research, exploration, multiple directions, variation matrices, or deduplication.
-- Read [batch-contract.md](references/batch-contract.md) for `program`, six or more deliverables, grouping, batching, or continuous numbering.
-- Read [reference-and-continuity.md](references/reference-and-continuity.md) for `controlled`, `program`, `extend`, references, identity locks, consistency, or a continuity pack.
-- Read [prompt-architecture.md](references/prompt-architecture.md) for `controlled`, `program`, negative constraints, named genre labels, concise or high-level prompts, and every task where Lovart will plan or generate images.
-- Do not follow a second-level reference chain. Return here after reading the required files.
+Follow every phase in order. Do not draft the final artifact before phases 1-3 pass.
 
-## Compile the prompt
+### Phase 1: extract authoritative facts
 
-### 1. Preserve the request
+Extract only facts supplied by the user or restored from an authorized continuity pack:
 
-Extract the asset types, intended use, quantity, group counts, visual direction, world rules, required motifs, references, requested research owner, aspect ratio, resolution, and continuation state.
-Treat explicit user constraints as authoritative.
-Apply them before route defaults. An explicit request for no continuity pack, no pause, internal-only numbering, no names, default resolution, fenced Markdown, or agent-owned planning overrides any later template default that conflicts with it.
-Keep requested motifs such as pagodas, waterfalls, white robes, or floating mountains; make them original through structure, function, material, geography, and culture rather than replacing them.
-Ask one concise question only when different answers would materially change identity, reference ownership, delivery count, or project direction.
-Make a reasonable reversible assumption otherwise and state it inside the Lovart prompt when execution depends on it.
+- asset types and intended use;
+- exact deliverable count and any user-defined groups;
+- visual direction, motifs, world rules, aspect ratio, resolution, and model request;
+- reference images and the attributes each image is authorized to control;
+- research owner, planning owner, metadata visibility, pause behavior, and continuation state.
 
-### 2. Route the deliverable
+Apply precedence in this order:
+
+1. current explicit user instruction;
+2. current image explicitly assigned by the user;
+3. self-contained continuity-pack field;
+4. route default;
+5. asset or quality profile default.
+
+Never convert an incidental image, a previous chat image, or casual recollection into a reference role without authorization.
+
+### Phase 2: create the route manifest
+
+Read [routing-schema.md](references/routing-schema.md) and create one complete route manifest before writing prose.
+Choose exactly one value for every required enum.
+
+Hard gate:
+
+- Ask one concise consolidated question when an unresolved answer would materially change identity, reference ownership, deliverable count, grouping ownership, research ownership, or project direction.
+- When the user assigns planning to Lovart, set `planning_owner=agent-planned`, `grouping_owner=lovart`, and normally `metadata_mode=internal`; do not ask the host to invent groups.
+- Set `continuity_pack=true` with `continuity_reason=program-default` for a program unless the user explicitly declines continuity output.
+- Make a reversible assumption only for a non-critical field and record it in `assumptions`.
+- If a critical field remains unresolved, stop. Do not compile a provisional prompt.
+
+On Windows, run `powershell -ExecutionPolicy Bypass -File scripts/validate_artifact.ps1 -Route <route.json> -RouteOnly`; the wrapper locates the Codex bundled Python and enables UTF-8. Do not guess with bare `python` or `py -3` first.
+On other systems, run `python3 scripts/validate_route.py <route.json>`.
+If local execution is genuinely unavailable, apply every schema rule manually and do not claim script validation.
+
+### Phase 3: load exactly one route compiler
 
 Choose exactly one route:
 
-| Route | Use when | Compile |
-| --- | --- | --- |
-| `explore` | The direction is unresolved or the user requests research, comparison, or a visual system | Research plan or verified findings, style cards, candidates, verification gate, and release rules |
-| `build` | The direction is sufficiently defined | Design rules, numbered deliverables when needed, generation instructions, and quality checks |
-| `extend` | The user continues an earlier batch | Restored locks, continuous numbering, new deltas, generation rules, and an updated continuity pack |
+- `explore`: read [explore-compiler.md](references/explore-compiler.md).
+- `build`: read [program-compiler.md](references/program-compiler.md). It covers simple, controlled, and program builds.
+- `extend`: read [extend-compiler.md](references/extend-compiler.md).
 
-Treat every conversation as potentially new.
-For `extend`, require either previous approved images or a pasted continuity pack.
-Do not reconstruct high-cost identity or style locks from casual recollection alone.
+Then read only the relevant profiles:
 
-### 3. Route research ownership
+- Read [asset-profiles.md](references/asset-profiles.md) for every requested asset family.
+- Read [quality-profiles.md](references/quality-profiles.md) for the intended medium and use.
+- Read [reference-and-continuity.md](references/reference-and-continuity.md) only when references, identity locks, `controlled`, `program`, `extend`, or a continuity pack is involved.
 
-Choose exactly one mode:
+Do not load a second route compiler. Do not follow a second-level reference chain.
 
-| Mode | Use when | Action |
-| --- | --- | --- |
-| `research-by-host` | The user needs real market cases or verifiable attribution and the current host has a usable access route | Search and verify first; embed compact findings and source links in the Lovart prompt |
-| `research-by-lovart` | The user explicitly asks Lovart Agent to research, or no host access route exists | Instruct Lovart to research, cite sources, mark uncertainty, and avoid invented cases |
-| `no-research` | The direction, assets, and references are already defined | Omit research and move directly to design and generation |
+### Phase 4: compile typed layers
 
-Honor an explicitly assigned research owner.
-Choose what happens after research: `research-then-review` waits for approval; `research-then-execute` emits the requested compact findings and continues without waiting. Use the latter when the user requests an uninterrupted run.
-When the request only says “调研市面案例”, prefer real host research when available.
-Judge access by capability rather than product name: use search or connectors first, browser control for JavaScript, redirects, cookies, or login state, and plain server fetch only as a fallback.
-Do not interpret a blocked fetch as evidence that a page or source does not exist.
-If every route fails, disclose the failure and switch to `research-by-lovart`; use unsourced synthesis only with user consent.
-Convert research into visible design attributes instead of listing titles or artist names as style tokens.
+Read [field-ownership.md](references/field-ownership.md) and compile these layers without field leakage:
 
-### 4. Route complexity
+1. Lovart interface recommendations;
+2. Agent execution contract;
+3. shared visual capsule;
+4. current item delta or variation constitution;
+5. backend rejection checks;
+6. continuity pack when required.
 
-Judge complexity from quantity, asset diversity, direction count, reference roles, identity locks, research, and cross-session continuity.
+Only the shared visual capsule plus the current item delta may reach the image model.
+Keep model, aspect ratio, resolution, numbering, research prose, names, reporting, retry logic, and rejection checks out of the image-model input.
 
-| Level | Typical condition | Required structure |
-| --- | --- | --- |
-| `simple` | One straightforward asset, one to five outputs, no complex reference relations | Goal, necessary reference roles, matching quality profile, generation instruction |
-| `controlled` | One asset family, a design sheet, multiple references, identity lock, or other high-cost constraint | Design rules, variation where useful, continuity pack, and numbering for multiple deliverables |
-| `program` | Multiple styles, factions, regions, asset types, a large batch, or a worldbuilding program | Full visual system, grouped matrix, numbered contract, verification gate, batch checks, continuity pack |
+### Phase 5: deterministic lint
 
-Do not classify by count alone.
-A single multi-reference character sheet may be `controlled`; five mixed worldbuilding assets may be `program`.
+Save the compiled artifact. On Windows run:
 
-### 5. Route assets, format, and quality
+`powershell -ExecutionPolicy Bypass -File scripts/validate_artifact.ps1 -Route <route.json> -Prompt <prompt.txt>`
 
-Select the primary and secondary asset profiles.
-Keep only dimensions relevant to the requested assets.
-Choose format by use: favor landscape for environments and integrated VFX, portrait for single characters or creatures, and landscape design sheets for turnarounds or staged VFX.
-Honor the user's explicit aspect ratio when currently supported.
-Otherwise recommend the nearest supported ratio and add a second crop, outpaint, or layout step only when the current Lovart surface supports it.
-Select the matching quality profile instead of applying cinematic realism to every asset.
-Translate “高级”, “电影感”, or “有质感” into visible optical, material, structural, painterly, or VFX behavior.
-Set the visual hierarchy in this order: medium and rendering behavior, cultural and genre system, subject design, then mood. Treat labels such as `国漫`, `仙侠`, `暗黑神话`, or a work title as research and cultural-routing clues, not as the operative rendering style. When premium CG is requested, lead the visual capsule with visible high-end CG behavior; use engine names only as supporting shorthand.
+On other systems run:
 
-### 6. Assign every reference a role
+`python3 scripts/validate_route.py <route.json>`
 
-Map each reference to only the attributes the user authorizes, such as identity, pose, composition, environment, material, or a named style axis.
-Keep all unassigned attributes neutral.
-Do not average conflicting references or copy interfaces, arrows, watermarks, or irrelevant text.
-Propose the most likely mapping first; ask one consolidated question only when alternate mappings materially change the result.
-Apply the dated model/API snapshot and the current Lovart surface limit separately; use the smaller applicable limit.
-Never present an API allowance as a verified Lovart interface allowance.
+`python3 scripts/lint_prompt.py --route <route.json> --prompt <prompt.txt>`
 
-### 7. Build controlled variation
+Treat every reported error as blocking. Revise the artifact and rerun until it passes.
+Warnings require explicit review but do not automatically block delivery.
+If the script is unavailable, perform the same checks manually and state only that manual validation was performed.
 
-For `program`, six or more outputs, or multiple directions, define fixed attributes, planned variation axes, and forbidden drift.
-Choose three or four reasonably independent axes.
-Do not let weather, time of day, or palette alone carry the difference between styles.
-Choose planning ownership: `host-specified`, `agent-planned`, or `hybrid`. Create a complete tracking contract before generation, but keep it internal to Lovart when the user requests only a high-level constitution or does not want names and per-item details.
-Make each number one independent deliverable unless the user explicitly requests a multi-view or multi-stage design sheet.
+### Phase 6: semantic audit
 
-### 8. Put the verification gate inside Lovart
+Re-read the original user request, route manifest, and compiled artifact from scratch.
+Check:
 
-Deliver the complete prompt in this conversation; never stop after compiling only a small sample.
-For `program` and multi-deliverable `controlled` tasks, apply the dynamic verification rules in `batch-contract.md`.
-Instruct Lovart to establish the full list and shared rules, generate the verification items, pause inside the Lovart conversation when remaining items exist, update shared rules after feedback, then continue the remaining numbers.
-When the user says “不要暂停，直接全部生成”, remove the wait but retain numbering and per-batch quality checks.
-Never create an empty “confirm before continuing” pause when the verification set already contains every requested output.
+- every explicit constraint is preserved;
+- no unconfirmed grouping, name, reference role, motif, or project direction was invented;
+- planning ownership and metadata visibility are respected;
+- every requested image remains one independent deliverable unless a design sheet was explicitly requested;
+- the visual capsule leads with medium and visible rendering behavior, then culture, subject, and mood;
+- the continuity pack records current facts rather than future or unresolved state;
+- no fabricated research, interface capability, source, or completion claim appears.
 
-### 9. Compile a layered prompt
+Deliver only after both lint and semantic audit pass.
 
-Separate the final artifact into an Agent execution contract, a compact shared visual capsule, per-item deltas or variation axes, and backend rejection checks. Do not instruct Lovart to forward execution, research, numbering, titles, or rejection prose into the image model. Keep the actual image-generation input to the shared visual capsule plus the current item delta.
+## Research and named directions
 
-Run the compression and pink-elephant audit in [prompt-architecture.md](references/prompt-architecture.md). Prefer positive replacement states over repeated forbidden nouns. Mention a high-cost forbidden mechanism once in backend rejection checks instead of repeating its synonyms throughout the visual prose.
+Use exactly one research mode from the route manifest:
 
-### 10. Compile only executable language
+- `research-by-host`: verify real cases through available sources and embed only compact executable findings and direct links.
+- `research-by-lovart`: instruct Lovart to research, cite sources, mark uncertainty, and separate confirmed facts from synthesis.
+- `no-research`: use when the direction and assets are already sufficiently defined.
 
-Build visible clauses as:
+Treat living creators, studios, genre labels, and work titles as routing clues, not operative image-model style tokens.
+Translate them into medium, shape, construction, material response, color, light, density, function, and narrative behavior.
+Do not claim attribution or production methods without verification.
 
-`[subject] + [action or state] + [environment or carrier] + [composition] + [visible properties from the selected quality profile]`
+## Reference capability gate
 
-Keep a sentence only when it changes the visible result, protects a high-cost lock, assigns a reference role, or controls Lovart execution and quality checks.
-Remove unsupported praise such as “masterpiece”, “8K”, “ultra-detailed”, or “cinematic” when it lacks visible meaning.
-Prefer structured specificity over keyword piles.
+Apply the dated API snapshot and the currently verified Lovart surface limit separately.
+Use the smaller applicable limit and never present an API allowance as a verified Lovart UI allowance.
+See [reference-and-continuity.md](references/reference-and-continuity.md).
 
-### 11. Check before delivery
+## Output surface
 
-Verify all of the following:
-
-- Preserve the requested model, motifs, quantity, grouping, and supported format.
-- Match the asset and quality profiles to the intended use.
-- Keep reference roles isolated and within applicable caps.
-- Include a complete tracking contract and non-random variation for batches; respect the selected visible, minimal, or internal metadata mode.
-- Keep every requested image as an independent deliverable unless a design sheet was requested.
-- Put any required pause inside the Lovart prompt, not in this conversation.
-- Keep medium and rendering behavior ahead of broad genre labels in the visual capsule.
-- Keep operational instructions, research text, names, numbering, and rejection checks out of the image-generation input.
-- Remove repeated negatives, contradictions, metadata that could render as typography, and named concepts that are mentioned only to prohibit them.
-- Include no fabricated research, source, interface fact, or completion claim.
-- Include no placeholders, bracketed instructions, alternatives, or English duplicate.
-- Make the continuity pack self-contained and list images that must be uploaded again.
-
-## Output contract
-
-Return one reusable Chinese artifact in the surface requested by the user. Use this default when no other surface is requested:
+Return one reusable Chinese artifact in the user's requested surface. Otherwise use the build surface below. The selected route compiler may replace the middle markers with its route-specific contract:
 
 ```text
 Lovart Agent 提示词
 
 【Lovart 界面建议】
 模型：Nano Banana Pro
-建议画幅：<one task-specific recommendation>
-建议分辨率：<one task-specific recommendation>
+建议画幅：任务适配的单一建议
+建议分辨率：任务适配的单一建议
 
 【提示词】
-<one complete ready-to-paste Chinese Lovart Agent prompt>
+【Agent执行合同】
+...
+【共享视觉胶囊】
+...
+【变化宪法】或【当前单项差异】
+...
+【后台拒绝检查】
+...
 
 【续做包｜下次继续时完整贴回】
-<self-contained common and asset-specific locks>
+...
 ```
 
-Replace every angle-bracketed instruction before delivery.
-Treat interface values as recommendations unless the current Lovart surface was directly observed.
-Keep model, aspect ratio, and resolution in `【Lovart 界面建议】`, not in the visual prose.
-Use a fenced Markdown artifact when the user requests it.
-Omit the continuity section whenever the user explicitly declines it or the task is a one-shot delivery with no continuation need. Include it for `extend` and otherwise when cross-session continuation is useful and not declined.
-Do not force visible names or a visible numbered table when metadata mode is `internal`.
+Replace every placeholder before delivery.
+Omit the continuity section only when the route says `continuity_pack=false`.
+Do not append an English duplicate, alternatives, or post-artifact explanation.
+
+## Skill modification gate
+
+When modifying this skill, read [regression-cases.md](references/regression-cases.md), run the official `quick_validate.py`, run `powershell -ExecutionPolicy Bypass -File scripts/validate_artifact.ps1 -Regressions` on Windows or `python3 scripts/run_regressions.py` elsewhere, and forward-test representative routes with clean context.
+Do not install or publish a revision until all blocking checks pass.

@@ -1,4 +1,4 @@
 interface:
   display_name: "Lovart Art Direction"
-  short_description: "把设计诉求编译成可直接交给 Lovart 的批量美术总提示词"
-  default_prompt: "使用 $lovart-art-direction 把我的设计需求编译成一份可直接粘贴给 Lovart Agent 的中文提示词。"
+  short_description: "强制路由并校验可直接交给 Lovart 的批量美术总提示词"
+  default_prompt: "使用 $lovart-art-direction 路由、编译并校验我的设计需求，输出一份可直接粘贴给 Lovart Agent 的中文总提示词。"
