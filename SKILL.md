@@ -17,6 +17,7 @@ Never fabricate sources, current interface capabilities, or completed outputs.
 - Read [research-and-variation.md](references/research-and-variation.md) for `program`, research, exploration, multiple directions, variation matrices, or deduplication.
 - Read [batch-contract.md](references/batch-contract.md) for `program`, six or more deliverables, grouping, batching, or continuous numbering.
 - Read [reference-and-continuity.md](references/reference-and-continuity.md) for `controlled`, `program`, `extend`, references, identity locks, consistency, or a continuity pack.
+- Read [prompt-architecture.md](references/prompt-architecture.md) for `controlled`, `program`, negative constraints, named genre labels, concise or high-level prompts, and every task where Lovart will plan or generate images.
 - Do not follow a second-level reference chain. Return here after reading the required files.
 
 ## Compile the prompt
@@ -25,6 +26,7 @@ Never fabricate sources, current interface capabilities, or completed outputs.
 
 Extract the asset types, intended use, quantity, group counts, visual direction, world rules, required motifs, references, requested research owner, aspect ratio, resolution, and continuation state.
 Treat explicit user constraints as authoritative.
+Apply them before route defaults. An explicit request for no continuity pack, no pause, internal-only numbering, no names, default resolution, fenced Markdown, or agent-owned planning overrides any later template default that conflicts with it.
 Keep requested motifs such as pagodas, waterfalls, white robes, or floating mountains; make them original through structure, function, material, geography, and culture rather than replacing them.
 Ask one concise question only when different answers would materially change identity, reference ownership, delivery count, or project direction.
 Make a reasonable reversible assumption otherwise and state it inside the Lovart prompt when execution depends on it.
@@ -54,6 +56,7 @@ Choose exactly one mode:
 | `no-research` | The direction, assets, and references are already defined | Omit research and move directly to design and generation |
 
 Honor an explicitly assigned research owner.
+Choose what happens after research: `research-then-review` waits for approval; `research-then-execute` emits the requested compact findings and continues without waiting. Use the latter when the user requests an uninterrupted run.
 When the request only says “调研市面案例”, prefer real host research when available.
 Judge access by capability rather than product name: use search or connectors first, browser control for JavaScript, redirects, cookies, or login state, and plain server fetch only as a fallback.
 Do not interpret a blocked fetch as evidence that a page or source does not exist.
@@ -82,6 +85,7 @@ Honor the user's explicit aspect ratio when currently supported.
 Otherwise recommend the nearest supported ratio and add a second crop, outpaint, or layout step only when the current Lovart surface supports it.
 Select the matching quality profile instead of applying cinematic realism to every asset.
 Translate “高级”, “电影感”, or “有质感” into visible optical, material, structural, painterly, or VFX behavior.
+Set the visual hierarchy in this order: medium and rendering behavior, cultural and genre system, subject design, then mood. Treat labels such as `国漫`, `仙侠`, `暗黑神话`, or a work title as research and cultural-routing clues, not as the operative rendering style. When premium CG is requested, lead the visual capsule with visible high-end CG behavior; use engine names only as supporting shorthand.
 
 ### 6. Assign every reference a role
 
@@ -97,7 +101,7 @@ Never present an API allowance as a verified Lovart interface allowance.
 For `program`, six or more outputs, or multiple directions, define fixed attributes, planned variation axes, and forbidden drift.
 Choose three or four reasonably independent axes.
 Do not let weather, time of day, or palette alone carry the difference between styles.
-Create a complete numbered list before generation.
+Choose planning ownership: `host-specified`, `agent-planned`, or `hybrid`. Create a complete tracking contract before generation, but keep it internal to Lovart when the user requests only a high-level constitution or does not want names and per-item details.
 Make each number one independent deliverable unless the user explicitly requests a multi-view or multi-stage design sheet.
 
 ### 8. Put the verification gate inside Lovart
@@ -108,7 +112,13 @@ Instruct Lovart to establish the full list and shared rules, generate the verifi
 When the user says “不要暂停，直接全部生成”, remove the wait but retain numbering and per-batch quality checks.
 Never create an empty “confirm before continuing” pause when the verification set already contains every requested output.
 
-### 9. Compile only executable language
+### 9. Compile a layered prompt
+
+Separate the final artifact into an Agent execution contract, a compact shared visual capsule, per-item deltas or variation axes, and backend rejection checks. Do not instruct Lovart to forward execution, research, numbering, titles, or rejection prose into the image model. Keep the actual image-generation input to the shared visual capsule plus the current item delta.
+
+Run the compression and pink-elephant audit in [prompt-architecture.md](references/prompt-architecture.md). Prefer positive replacement states over repeated forbidden nouns. Mention a high-cost forbidden mechanism once in backend rejection checks instead of repeating its synonyms throughout the visual prose.
+
+### 10. Compile only executable language
 
 Build visible clauses as:
 
@@ -118,23 +128,26 @@ Keep a sentence only when it changes the visible result, protects a high-cost lo
 Remove unsupported praise such as “masterpiece”, “8K”, “ultra-detailed”, or “cinematic” when it lacks visible meaning.
 Prefer structured specificity over keyword piles.
 
-### 10. Check before delivery
+### 11. Check before delivery
 
 Verify all of the following:
 
 - Preserve the requested model, motifs, quantity, grouping, and supported format.
 - Match the asset and quality profiles to the intended use.
 - Keep reference roles isolated and within applicable caps.
-- Include a complete numbered contract and non-random variation for batches.
+- Include a complete tracking contract and non-random variation for batches; respect the selected visible, minimal, or internal metadata mode.
 - Keep every requested image as an independent deliverable unless a design sheet was requested.
 - Put any required pause inside the Lovart prompt, not in this conversation.
+- Keep medium and rendering behavior ahead of broad genre labels in the visual capsule.
+- Keep operational instructions, research text, names, numbering, and rejection checks out of the image-generation input.
+- Remove repeated negatives, contradictions, metadata that could render as typography, and named concepts that are mentioned only to prohibit them.
 - Include no fabricated research, source, interface fact, or completion claim.
 - Include no placeholders, bracketed instructions, alternatives, or English duplicate.
 - Make the continuity pack self-contained and list images that must be uploaded again.
 
 ## Output contract
 
-Return only the following reusable artifact in Chinese, without teaching commentary:
+Return one reusable Chinese artifact in the surface requested by the user. Use this default when no other surface is requested:
 
 ```text
 Lovart Agent 提示词
@@ -154,5 +167,6 @@ Lovart Agent 提示词
 Replace every angle-bracketed instruction before delivery.
 Treat interface values as recommendations unless the current Lovart surface was directly observed.
 Keep model, aspect ratio, and resolution in `【Lovart 界面建议】`, not in the visual prose.
-Omit the continuity section only for a `simple` task with no continuation need.
-Always include it for `controlled`, `program`, and `extend`.
+Use a fenced Markdown artifact when the user requests it.
+Omit the continuity section whenever the user explicitly declines it or the task is a one-shot delivery with no continuation need. Include it for `extend` and otherwise when cross-session continuation is useful and not declined.
+Do not force visible names or a visible numbered table when metadata mode is `internal`.
