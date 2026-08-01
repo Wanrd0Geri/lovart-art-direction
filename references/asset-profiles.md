@@ -20,6 +20,10 @@ Treat these formats as recommendations.
 Honor an explicit user format when the current Lovart surface supports it.
 When it does not, recommend the nearest available format and describe the difference.
 
+For premium CG assets, state the medium before the genre. For example, compile `high-end realistic CG environment with physically grounded materials and natural global illumination; Chinese xianxia worldbuilding` rather than leading with `国漫仙侠风`. Use the cultural label to control architecture, landscape, ecology, costume, symbolism, and narrative scale, not to imply simplified animation rendering.
+
+For a black-background full-body character, use the full-body profile plus the conditional quality rules in `quality-profiles.md`. For a premium CG environment, use the environment profile plus the premium CG environment condition there.
+
 Use this dated Nano Banana Pro API snapshot only as a capability reference, not as proof of Lovart UI support:
 
 `1:1, 3:2, 2:3, 3:4, 4:3, 4:5, 5:4, 9:16, 16:9, 21:9` — checked 2026-08-01.
