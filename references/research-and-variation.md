@@ -66,8 +66,19 @@ Choose three or four reasonably independent axes.
 Test independence by changing one axis value: if that forces another axis to change, split or redefine the axes.
 Assign axis values and one unique difference to every numbered deliverable.
 
+## Planning ownership
+
+Choose one mode:
+
+- `host-specified`: put the complete item-level plan in the artifact when the user needs to review or control every deliverable.
+- `agent-planned`: provide fixed rules, quotas, three or four variation axes, and forbidden drift; instruct Lovart to create the complete tracking contract internally.
+- `hybrid`: define high-cost or representative items explicitly and let Lovart complete the remaining contract within fixed quotas.
+
+Do not equate a large count with a long user-facing prompt. Use `agent-planned` when the user asks for a broad constitution or says Lovart can decide item details.
+
 ## Research output
 
 For `research-by-host`, embed only verified links, compact findings, and selected executable attributes.
 For `research-by-lovart`, require Lovart to separate confirmed facts, uncertain claims, design rules, and non-copyable elements before generation.
+Choose `research-then-review` when approval is needed. Choose `research-then-execute` when the user requests uninterrupted generation: Lovart may emit the compact requested findings and source links, then must continue without a confirmation gate.
 For every mode, prohibit invented works, authors, links, production methods, or claims of market consensus.
